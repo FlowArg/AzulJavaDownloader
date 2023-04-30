@@ -1,0 +1,90 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+    id 'idea'
+}
+
+group 'fr.flowarg'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.jetbrains:annotations:24.0.1'
+    implementation 'fr.flowarg:flowmultitools:1.4.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+}
+
+compileJava {
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+    options.encoding = 'UTF-8'
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+artifacts {
+    archives sourcesJar, javadocJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact tasks.sourcesJar
+            artifact tasks.javadocJar
+
+            pom {
+                groupId = project.group
+                version = project.version
+                artifactId = 'azuljavadownloader'
+                name = project.name
+                description = 'Simple tool to download Azul\'s Zulu Java'
+                url = 'https://github.com/FlowArg/AzulJavaDownloader'
+
+                scm {
+                    connection = 'scm:git:git://github.com/FlowArg/AzulJavaDownloader.git'
+                    developerConnection = 'scm:git:ssh://github.com:FlowArg/AzulJavaDownloader.git'
+                    url = 'https://github.com/FlowArg/AzulJavaDownloader/tree/master'
+                }
+
+                licenses {
+                    license {
+                        name = 'GNU General Public License v3.0'
+                        url = 'https://www.gnu.org/licenses/gpl-3.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'flowarg'
+                        name = 'Flow Arg'
+                        email = 'flow@flowarg.fr'
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            credentials {
+                username = System.getenv("OSSRH_USERNAME")
+                password = System.getenv("OSSRH_PASSWORD")
+            }
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+        }
+    }
+}
+
+signing {
+    def signingKey = System.getenv("GPG_PRIVATE_KEY")
+    def signingPassword = System.getenv("GPG_PASSPHRASE")
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications.mavenJava
+}
