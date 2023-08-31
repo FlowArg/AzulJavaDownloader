@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import fr.flowarg.flowio.FileUtils;
+import fr.flowarg.flowstringer.StringUtils;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
@@ -18,6 +19,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Enumeration;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
@@ -98,7 +100,7 @@ public class AzulJavaDownloader
     public Path downloadAndInstall(AzulJavaBuildInfo buildInfo, Path dirPath) throws IOException
     {
         final Path archivePath = dirPath.resolve(buildInfo.getName());
-        final Path extractedPath = dirPath.resolve(buildInfo.getName().replace(buildInfo.getArchiveType(), ""));
+        final Path extractedPath = dirPath.resolve(StringUtils.empty(buildInfo.getName(), "." + buildInfo.getArchiveType()));
 
         if(Files.notExists(extractedPath))
             Files.createDirectories(extractedPath);
@@ -117,7 +119,8 @@ public class AzulJavaDownloader
 
         if(buildInfo.getArchiveType().equalsIgnoreCase("zip"))
             smartUnzip(dirPath, archivePath);
-        else if(buildInfo.getArchiveType().equalsIgnoreCase("tar.gz")) smartDecompressTarArchive(archivePath, dirPath);
+        else if(buildInfo.getArchiveType().equalsIgnoreCase("tar.gz"))
+            smartDecompressTarArchive(archivePath, dirPath);
 
         if (this.callback != null)
             this.callback.onStep(Callback.Step.DONE);
@@ -190,14 +193,14 @@ public class AzulJavaDownloader
                     Files.createDirectories(path);
                 else
                 {
-                    if(Files.notExists(path.getParent()) || FileUtils.getFileSizeBytes(path) != entry.getSize())
+                    if(Files.notExists(path) || FileUtils.getFileSizeBytes(path) != entry.getSize())
                     {
                         int count;
-                        final byte[] data = new byte[4096];
+                        final byte[] data = new byte[8192];
                         try(final OutputStream fos = Files.newOutputStream(path)
-                            ; final BufferedOutputStream dest = new BufferedOutputStream(fos, 4096))
+                            ; final BufferedOutputStream dest = new BufferedOutputStream(fos, 8192))
                         {
-                            while((count = tarIn.read(data, 0, 4096)) != -1)
+                            while((count = tarIn.read(data, 0, 8192)) != -1)
                                 dest.write(data, 0, count);
                         }
                     }
@@ -231,12 +234,6 @@ public class AzulJavaDownloader
             return;
 
         if(Files.notExists(fl) || FileUtils.getCRC32(fl) != entry.getCrc())
-        {
-            try(final BufferedInputStream is = new BufferedInputStream(zipFile.getInputStream(entry));final BufferedOutputStream fo = new BufferedOutputStream(Files.newOutputStream(fl)))
-            {
-                while(is.available() > 0)
-                    fo.write(is.read());
-            }
-        }
+            Files.copy(zipFile.getInputStream(entry), fl, StandardCopyOption.REPLACE_EXISTING);
     }
 }
