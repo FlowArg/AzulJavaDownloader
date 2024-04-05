@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'fr.flowarg'
-version '1.0.1'
+version '1.0.2'
 
 repositories {
     mavenCentral()
@@ -14,7 +14,7 @@ repositories {
 
 dependencies {
     implementation 'org.jetbrains:annotations:24.0.1'
-    implementation 'fr.flowarg:flowmultitools:1.4.0'
+    implementation 'fr.flowarg:flowmultitools:1.4.1'
     implementation 'com.google.code.gson:gson:2.10.1'
 }
 

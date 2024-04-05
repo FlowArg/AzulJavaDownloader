@@ -21,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Enumeration;
-import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -83,11 +82,14 @@ public class AzulJavaDownloader
         if(this.callback != null)
             this.callback.onStep(Callback.Step.QUERYING);
 
-        final Optional<AzulJavaBuildInfo> buildInfoOptional = requestPackage(requestedJavaInfo);
-
-        if(buildInfoOptional.isPresent())
-            return buildInfoOptional.get();
-        else throw new IOException("No build info found!");
+        try
+        {
+            return requestPackage(requestedJavaInfo);
+        }
+        catch (IOException e)
+        {
+            throw new IOException("No build info found!", e);
+        }
     }
 
     /**
@@ -130,63 +132,46 @@ public class AzulJavaDownloader
 
     // Internal methods
 
-    private static Optional<AzulJavaBuildInfo> requestPackage(RequestedJavaInfo requestedJavaInfo)
+    private static AzulJavaBuildInfo requestPackage(RequestedJavaInfo requestedJavaInfo) throws IOException
     {
-        try
+        HttpsURLConnection connection = (HttpsURLConnection) new URL(String.format(API_ENDPOINT_PACKAGE, requestPackages(requestedJavaInfo))).openConnection();
+        connection.addRequestProperty("Accept", "application/json");
+        connection.addRequestProperty("User-Agent", "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.124 Safari/537.36");
+        connection.setInstanceFollowRedirects(true);
+        try(InputStream stream = new BufferedInputStream(connection.getInputStream()))
         {
-            HttpsURLConnection connection = (HttpsURLConnection) new URL(String.format(API_ENDPOINT_PACKAGE, requestPackages(requestedJavaInfo))).openConnection();
-            connection.addRequestProperty("Accept", "application/json");
-            connection.addRequestProperty("User-Agent", "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.124 Safari/537.36");
-            connection.setInstanceFollowRedirects(true);
-            try(InputStream stream = new BufferedInputStream(connection.getInputStream()))
-            {
-                final ReadableByteChannel rbc = Channels.newChannel(stream);
-                final Reader enclosedReader = Channels.newReader(rbc, StandardCharsets.UTF_8.newDecoder(), -1);
+            final ReadableByteChannel rbc = Channels.newChannel(stream);
+            final Reader enclosedReader = Channels.newReader(rbc, StandardCharsets.UTF_8.newDecoder(), -1);
 
-                return Optional.of(GSON.fromJson(enclosedReader, AzulJavaBuildInfo.class));
-            }
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            return Optional.empty();
+            return GSON.fromJson(enclosedReader, AzulJavaBuildInfo.class);
         }
     }
 
-    private static String requestPackages(RequestedJavaInfo requestedJavaInfo)
+    private static String requestPackages(RequestedJavaInfo requestedJavaInfo) throws IOException
     {
-        try
+        HttpsURLConnection connection = (HttpsURLConnection)new URL(requestedJavaInfo.buildParams(API_ENDPOINT_PACKAGES)).openConnection();
+        connection.addRequestProperty("Accept", "application/json");
+        connection.addRequestProperty("User-Agent", "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.124 Safari/537.36");
+        connection.setInstanceFollowRedirects(true);
+        try(InputStream stream = new BufferedInputStream(connection.getInputStream()))
         {
-            HttpsURLConnection connection = (HttpsURLConnection) new URL(requestedJavaInfo.buildParams(API_ENDPOINT_PACKAGES)).openConnection();
-            connection.addRequestProperty("Accept", "application/json");
-            connection.addRequestProperty("User-Agent", "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.124 Safari/537.36");
-            connection.setInstanceFollowRedirects(true);
-            try(InputStream stream = new BufferedInputStream(connection.getInputStream()))
-            {
-                final ReadableByteChannel rbc = Channels.newChannel(stream);
-                final Reader enclosedReader = Channels.newReader(rbc, StandardCharsets.UTF_8.newDecoder(), -1);
-                final JsonArray array = JsonParser.parseReader(new BufferedReader(enclosedReader)).getAsJsonArray();
-                return array.get(0).getAsJsonObject().get("package_uuid").getAsString();
-            }
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            return "";
+            final ReadableByteChannel rbc = Channels.newChannel(stream);
+            final Reader enclosedReader = Channels.newReader(rbc, StandardCharsets.UTF_8.newDecoder(), -1);
+            final JsonArray array = JsonParser.parseReader(new BufferedReader(enclosedReader)).getAsJsonArray();
+            return array.get(0).getAsJsonObject().get("package_uuid").getAsString();
         }
     }
 
     private static void smartDecompressTarArchive(final Path tarGzFile, final Path destinationDir) throws IOException
     {
         try(final InputStream is = Files.newInputStream(tarGzFile)
-            ; final BufferedInputStream bis = new BufferedInputStream(is)
-            ; final GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(bis)
+            ; final GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(is)
             ; final TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)
         )
         {
             TarArchiveEntry entry;
 
-            while ((entry = (TarArchiveEntry)tarIn.getNextEntry()) != null)
+            while ((entry = tarIn.getNextEntry()) != null)
             {
                 final Path path = destinationDir.resolve(entry.getName());
                 if(entry.isDirectory())
@@ -196,11 +181,10 @@ public class AzulJavaDownloader
                     if(Files.notExists(path) || FileUtils.getFileSizeBytes(path) != entry.getSize())
                     {
                         int count;
-                        final byte[] data = new byte[8192];
-                        try(final OutputStream fos = Files.newOutputStream(path)
-                            ; final BufferedOutputStream dest = new BufferedOutputStream(fos, 8192))
+                        final byte[] data = new byte[4096];
+                        try(final OutputStream dest = Files.newOutputStream(path))
                         {
-                            while((count = tarIn.read(data, 0, 8192)) != -1)
+                            while((count = tarIn.read(data, 0, 4096)) != -1)
                                 dest.write(data, 0, count);
                         }
                     }
@@ -224,14 +208,11 @@ public class AzulJavaDownloader
 
     private static void smartUnzip0(Path fl, ZipFile zipFile, ZipEntry entry) throws IOException
     {
-        if (fl.getFileName().toString().endsWith("/"))
-            Files.createDirectory(fl);
-
-        if(Files.notExists(fl))
-            Files.createDirectories(fl.getParent());
-
         if(entry.isDirectory())
             return;
+
+        if (Files.notExists(fl))
+            Files.createDirectories(fl.getParent());
 
         if(Files.notExists(fl) || FileUtils.getCRC32(fl) != entry.getCrc())
             Files.copy(zipFile.getInputStream(entry), fl, StandardCopyOption.REPLACE_EXISTING);
