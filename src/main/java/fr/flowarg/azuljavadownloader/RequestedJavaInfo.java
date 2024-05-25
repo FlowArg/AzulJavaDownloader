@@ -4,21 +4,20 @@ public class RequestedJavaInfo
 {
     private final String javaVersion;
     private final AzulJavaType javaType;
-    private final String os;
-    private final String arch;
-    private final boolean javafxBundled;
+    private final AzulJavaOS os;
+    private final AzulJavaArch arch;
 
     // optionals
-    private String binaryType;
+    private boolean javafxBundled;
+    private String archiveType;
 
-    public RequestedJavaInfo(String javaVersion, AzulJavaType javaType, String os, String arch, boolean javafxBundled)
+    public RequestedJavaInfo(String javaVersion, AzulJavaType javaType, AzulJavaOS os, AzulJavaArch arch)
     {
         this.javaVersion = javaVersion;
         this.javaType = javaType;
         this.os = os;
         this.arch = arch;
-        this.javafxBundled = javafxBundled;
-        this.binaryType = this.os.equalsIgnoreCase("windows") ? "zip" : "tar.gz";
+        this.archiveType = this.os == AzulJavaOS.WINDOWS ? "zip" : "tar.gz";
     }
 
     public String getJavaVersion()
@@ -31,12 +30,12 @@ public class RequestedJavaInfo
         return this.javaType;
     }
 
-    public String getOs()
+    public AzulJavaOS getOs()
     {
         return this.os;
     }
 
-    public String getArch()
+    public AzulJavaArch getArch()
     {
         return this.arch;
     }
@@ -48,12 +47,18 @@ public class RequestedJavaInfo
 
     public String getBinaryType()
     {
-        return this.binaryType;
+        return this.archiveType;
     }
 
-    public RequestedJavaInfo setBinaryType(String binaryType)
+    public RequestedJavaInfo setJavaFxBundled(boolean javafxBundled)
     {
-        this.binaryType = binaryType;
+        this.javafxBundled = javafxBundled;
+        return this;
+    }
+
+    public RequestedJavaInfo setArchiveType(String archiveType)
+    {
+        this.archiveType = archiveType;
         return this;
     }
 
@@ -61,7 +66,7 @@ public class RequestedJavaInfo
     {
         return apiEndpointPackages + String.format(
                 "?java_version=%s&os=%s&arch=%s&java_package_type=%s&javafx_bundled=%s&latest=true&archive_type=%s&page=1&page_size=100",
-                this.javaVersion, this.os, this.arch, this.javaType.getType(), this.javafxBundled, this.binaryType
+                this.javaVersion, this.os.toString(), this.arch.toString(), this.javaType.toString(), this.javafxBundled, this.archiveType
         );
     }
 }

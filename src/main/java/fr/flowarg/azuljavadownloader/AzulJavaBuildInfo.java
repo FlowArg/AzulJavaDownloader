@@ -145,6 +145,12 @@ public class AzulJavaBuildInfo
     @Override
     public String toString()
     {
-        return "AzulJavaBuildInfo{" + "packageUUID='" + packageUUID + '\'' + ", name='" + name + '\'' + ", md5Hash='" + md5Hash + '\'' + ", sha256Hash='" + sha256Hash + '\'' + ", buildDate='" + buildDate + '\'' + ", lastModified='" + lastModified + '\'' + ", downloadUrl='" + downloadUrl + '\'' + ", product='" + product + '\'' + ", javaVersion=" + javaVersion + ", javaPackageType='" + javaPackageType + '\'' + ", javafxBundled=" + javafxBundled + ", javaPackageFeatures=" + javaPackageFeatures + ", os='" + os + '\'' + ", archiveType='" + archiveType + '\'' + ", size=" + size + ", latest=" + latest + ", distroVersion=" + distroVersion + '}';
+        return "AzulJavaBuildInfo{" + "packageUUID='" + this.packageUUID + '\'' + ", name='" + this.name + '\'' +
+                ", md5Hash='" + this.md5Hash + '\'' + ", sha256Hash='" + this.sha256Hash + '\'' + ", buildDate='" +
+                this.buildDate + '\'' + ", lastModified='" + this.lastModified + '\'' + ", downloadUrl='" +
+                this.downloadUrl + '\'' + ", product='" + this.product + '\'' + ", javaVersion=" + this.javaVersion +
+                ", javaPackageType='" + this.javaPackageType + '\'' + ", javafxBundled=" + this.javafxBundled +
+                ", javaPackageFeatures=" + this.javaPackageFeatures + ", os='" + this.os + '\'' + ", archiveType='" +
+                this.archiveType + '\'' + ", size=" + this.size + ", latest=" + this.latest + ", distroVersion=" + this.distroVersion + '}';
     }
 }

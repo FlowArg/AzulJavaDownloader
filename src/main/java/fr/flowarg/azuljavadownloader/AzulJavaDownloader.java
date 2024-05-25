@@ -31,16 +31,16 @@ import java.util.zip.ZipFile;
  * // Example :
  * final AzulJavaDownloader downloader = new AzulJavaDownloader(System.out::println);
  * final Path javas = Paths.get("javas"); // The directory where the Java versions will be downloaded.
- * final AzulJavaBuildInfo buildInfoWindows = downloader.getBuildInfo(new RequestedJavaInfo("17", AzulJavaType.JDK, "windows", "x64", true)); // jdk 17 with javafx for windows 64 bits
+ * final AzulJavaBuildInfo buildInfoWindows = downloader.getBuildInfo(new RequestedJavaInfo("17", AzulJavaType.JDK, AzulJavaOS.WINDOWS, AzulJavaArch.X64).setJavaFxBundled(true)); // jdk 17 with javafx for windows 64 bits
  * final Path javaHomeWindows = downloader.downloadAndInstall(buildInfoWindows, javas);
  * System.out.println(javaHomeWindows.toAbsolutePath());
  *
- * final AzulJavaBuildInfo buildInfoLinux = downloader.getBuildInfo(new RequestedJavaInfo("17", AzulJavaType.JDK, "linux", "x64", true)); // jdk 17 with javafx for linux 64 bits
+ * final AzulJavaBuildInfo buildInfoLinux = downloader.getBuildInfo(new RequestedJavaInfo("17", AzulJavaType.JDK, AzulJavaOS.LINUX, AzulJavaArch.X64).setJavaFxBundled(true)); // jdk 17 with javafx for linux 64 bits
  * final Path javaHomeLinux = downloader.downloadAndInstall(buildInfoLinux, javas);
  * System.out.println(javaHomeLinux.toAbsolutePath());
  * }
  * </pre>
- * @see <a href="https://docs.azul.com/core/zulu-openjdk/install/metadata-api">Azul Zulu's Metadata API</a>
+ * @see <a href="https://docs.azul.com/core/install/metadata-api">Azul Zulu's Metadata API</a>
  */
 public class AzulJavaDownloader
 {
@@ -127,7 +127,7 @@ public class AzulJavaDownloader
         if (this.callback != null)
             this.callback.onStep(Callback.Step.DONE);
 
-        return extractedPath;
+        return extractedPath.toAbsolutePath();
     }
 
     // Internal methods
@@ -182,10 +182,10 @@ public class AzulJavaDownloader
                     {
                         int count;
                         final byte[] data = new byte[4096];
-                        try(final OutputStream dest = Files.newOutputStream(path))
+                        try(final OutputStream output = Files.newOutputStream(path))
                         {
                             while((count = tarIn.read(data, 0, 4096)) != -1)
-                                dest.write(data, 0, count);
+                                output.write(data, 0, count);
                         }
                     }
                 }
