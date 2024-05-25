@@ -47,7 +47,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../fr/flowarg/azuljavadownloader/AzulJavaBuildInfo.html" title="class in fr.flowarg.azuljavadownloader"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../fr/flowarg/azuljavadownloader/AzulJavaType.html" title="enum in fr.flowarg.azuljavadownloader"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../fr/flowarg/azuljavadownloader/AzulJavaOS.html" title="enum in fr.flowarg.azuljavadownloader"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../index.html?fr/flowarg/azuljavadownloader/AzulJavaDownloader.html" target="_top">Frames</a></li>
@@ -114,18 +114,18 @@ extends java.lang.Object</pre>
  // Example :
  final AzulJavaDownloader downloader = new AzulJavaDownloader(System.out::println);
  final Path javas = Paths.get("javas"); // The directory where the Java versions will be downloaded.
- final AzulJavaBuildInfo buildInfoWindows = downloader.getBuildInfo(new RequestedJavaInfo("17", AzulJavaType.JDK, "windows", "x64", true)); // jdk 17 with javafx for windows 64 bits
+ final AzulJavaBuildInfo buildInfoWindows = downloader.getBuildInfo(new RequestedJavaInfo("17", AzulJavaType.JDK, AzulJavaOS.WINDOWS, AzulJavaArch.X64).setJavaFxBundled(true)); // jdk 17 with javafx for windows 64 bits
  final Path javaHomeWindows = downloader.downloadAndInstall(buildInfoWindows, javas);
  System.out.println(javaHomeWindows.toAbsolutePath());
 
- final AzulJavaBuildInfo buildInfoLinux = downloader.getBuildInfo(new RequestedJavaInfo("17", AzulJavaType.JDK, "linux", "x64", true)); // jdk 17 with javafx for linux 64 bits
+ final AzulJavaBuildInfo buildInfoLinux = downloader.getBuildInfo(new RequestedJavaInfo("17", AzulJavaType.JDK, AzulJavaOS.LINUX, AzulJavaArch.X64).setJavaFxBundled(true)); // jdk 17 with javafx for linux 64 bits
  final Path javaHomeLinux = downloader.downloadAndInstall(buildInfoLinux, javas);
  System.out.println(javaHomeLinux.toAbsolutePath());
  </code>
  </pre></div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="https://docs.azul.com/core/zulu-openjdk/install/metadata-api">Azul Zulu's Metadata API</a></dd>
+<dd><a href="https://docs.azul.com/core/install/metadata-api">Azul Zulu's Metadata API</a></dd>
 </dl>
 </li>
 </ul>
@@ -304,7 +304,7 @@ extends java.lang.Object</pre>
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../fr/flowarg/azuljavadownloader/AzulJavaBuildInfo.html" title="class in fr.flowarg.azuljavadownloader"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../fr/flowarg/azuljavadownloader/AzulJavaType.html" title="enum in fr.flowarg.azuljavadownloader"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../fr/flowarg/azuljavadownloader/AzulJavaOS.html" title="enum in fr.flowarg.azuljavadownloader"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../index.html?fr/flowarg/azuljavadownloader/AzulJavaDownloader.html" target="_top">Frames</a></li>

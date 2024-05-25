@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -126,11 +126,10 @@ extends java.lang.Object</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../fr/flowarg/azuljavadownloader/RequestedJavaInfo.html#RequestedJavaInfo-java.lang.String-fr.flowarg.azuljavadownloader.AzulJavaType-java.lang.String-java.lang.String-boolean-">RequestedJavaInfo</a></span>(java.lang.String&nbsp;javaVersion,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../fr/flowarg/azuljavadownloader/RequestedJavaInfo.html#RequestedJavaInfo-java.lang.String-fr.flowarg.azuljavadownloader.AzulJavaType-fr.flowarg.azuljavadownloader.AzulJavaOS-fr.flowarg.azuljavadownloader.AzulJavaArch-">RequestedJavaInfo</a></span>(java.lang.String&nbsp;javaVersion,
                  <a href="../../../fr/flowarg/azuljavadownloader/AzulJavaType.html" title="enum in fr.flowarg.azuljavadownloader">AzulJavaType</a>&nbsp;javaType,
-                 java.lang.String&nbsp;os,
-                 java.lang.String&nbsp;arch,
-                 boolean&nbsp;javafxBundled)</code>&nbsp;</td>
+                 <a href="../../../fr/flowarg/azuljavadownloader/AzulJavaOS.html" title="enum in fr.flowarg.azuljavadownloader">AzulJavaOS</a>&nbsp;os,
+                 <a href="../../../fr/flowarg/azuljavadownloader/AzulJavaArch.html" title="enum in fr.flowarg.azuljavadownloader">AzulJavaArch</a>&nbsp;arch)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -152,7 +151,7 @@ extends java.lang.Object</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../fr/flowarg/azuljavadownloader/RequestedJavaInfo.html#buildParams-java.lang.String-">buildParams</a></span>(java.lang.String&nbsp;apiEndpointPackages)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colFirst"><code><a href="../../../fr/flowarg/azuljavadownloader/AzulJavaArch.html" title="enum in fr.flowarg.azuljavadownloader">AzulJavaArch</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../fr/flowarg/azuljavadownloader/RequestedJavaInfo.html#getArch--">getArch</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
@@ -168,7 +167,7 @@ extends java.lang.Object</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../fr/flowarg/azuljavadownloader/RequestedJavaInfo.html#getJavaVersion--">getJavaVersion</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colFirst"><code><a href="../../../fr/flowarg/azuljavadownloader/AzulJavaOS.html" title="enum in fr.flowarg.azuljavadownloader">AzulJavaOS</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../fr/flowarg/azuljavadownloader/RequestedJavaInfo.html#getOs--">getOs</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i6" class="altColor">
@@ -177,7 +176,11 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="../../../fr/flowarg/azuljavadownloader/RequestedJavaInfo.html" title="class in fr.flowarg.azuljavadownloader">RequestedJavaInfo</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../fr/flowarg/azuljavadownloader/RequestedJavaInfo.html#setBinaryType-java.lang.String-">setBinaryType</a></span>(java.lang.String&nbsp;binaryType)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../fr/flowarg/azuljavadownloader/RequestedJavaInfo.html#setArchiveType-java.lang.String-">setArchiveType</a></span>(java.lang.String&nbsp;archiveType)</code>&nbsp;</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code><a href="../../../fr/flowarg/azuljavadownloader/RequestedJavaInfo.html" title="class in fr.flowarg.azuljavadownloader">RequestedJavaInfo</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../fr/flowarg/azuljavadownloader/RequestedJavaInfo.html#setJavaFxBundled-boolean-">setJavaFxBundled</a></span>(boolean&nbsp;javafxBundled)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -201,7 +204,7 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="RequestedJavaInfo-java.lang.String-fr.flowarg.azuljavadownloader.AzulJavaType-java.lang.String-java.lang.String-boolean-">
+<a name="RequestedJavaInfo-java.lang.String-fr.flowarg.azuljavadownloader.AzulJavaType-fr.flowarg.azuljavadownloader.AzulJavaOS-fr.flowarg.azuljavadownloader.AzulJavaArch-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -209,9 +212,8 @@ extends java.lang.Object</pre>
 <h4>RequestedJavaInfo</h4>
 <pre>public&nbsp;RequestedJavaInfo(java.lang.String&nbsp;javaVersion,
                          <a href="../../../fr/flowarg/azuljavadownloader/AzulJavaType.html" title="enum in fr.flowarg.azuljavadownloader">AzulJavaType</a>&nbsp;javaType,
-                         java.lang.String&nbsp;os,
-                         java.lang.String&nbsp;arch,
-                         boolean&nbsp;javafxBundled)</pre>
+                         <a href="../../../fr/flowarg/azuljavadownloader/AzulJavaOS.html" title="enum in fr.flowarg.azuljavadownloader">AzulJavaOS</a>&nbsp;os,
+                         <a href="../../../fr/flowarg/azuljavadownloader/AzulJavaArch.html" title="enum in fr.flowarg.azuljavadownloader">AzulJavaArch</a>&nbsp;arch)</pre>
 </li>
 </ul>
 </li>
@@ -246,7 +248,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getOs</h4>
-<pre>public&nbsp;java.lang.String&nbsp;getOs()</pre>
+<pre>public&nbsp;<a href="../../../fr/flowarg/azuljavadownloader/AzulJavaOS.html" title="enum in fr.flowarg.azuljavadownloader">AzulJavaOS</a>&nbsp;getOs()</pre>
 </li>
 </ul>
 <a name="getArch--">
@@ -255,7 +257,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getArch</h4>
-<pre>public&nbsp;java.lang.String&nbsp;getArch()</pre>
+<pre>public&nbsp;<a href="../../../fr/flowarg/azuljavadownloader/AzulJavaArch.html" title="enum in fr.flowarg.azuljavadownloader">AzulJavaArch</a>&nbsp;getArch()</pre>
 </li>
 </ul>
 <a name="isJavafxBundled--">
@@ -276,13 +278,22 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;java.lang.String&nbsp;getBinaryType()</pre>
 </li>
 </ul>
-<a name="setBinaryType-java.lang.String-">
+<a name="setJavaFxBundled-boolean-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>setBinaryType</h4>
-<pre>public&nbsp;<a href="../../../fr/flowarg/azuljavadownloader/RequestedJavaInfo.html" title="class in fr.flowarg.azuljavadownloader">RequestedJavaInfo</a>&nbsp;setBinaryType(java.lang.String&nbsp;binaryType)</pre>
+<h4>setJavaFxBundled</h4>
+<pre>public&nbsp;<a href="../../../fr/flowarg/azuljavadownloader/RequestedJavaInfo.html" title="class in fr.flowarg.azuljavadownloader">RequestedJavaInfo</a>&nbsp;setJavaFxBundled(boolean&nbsp;javafxBundled)</pre>
+</li>
+</ul>
+<a name="setArchiveType-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setArchiveType</h4>
+<pre>public&nbsp;<a href="../../../fr/flowarg/azuljavadownloader/RequestedJavaInfo.html" title="class in fr.flowarg.azuljavadownloader">RequestedJavaInfo</a>&nbsp;setArchiveType(java.lang.String&nbsp;archiveType)</pre>
 </li>
 </ul>
 <a name="buildParams-java.lang.String-">
